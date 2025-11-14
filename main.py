@@ -1683,41 +1683,32 @@ def recent_urls():
 
 
 # ---------------- Main Entrypoint ----------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     import os
     print("\n" + "=" * 70)
-    print("🔍 DEBUG: Starting application")
+    print("🔍 DEBUG: Starting application (local dev mode)")
     print("=" * 70)
 
-    # Get the port from Render's environment variable, default to 5000 if not set
     port = int(os.environ.get("PORT", 5000))
 
-    # Preload caches before starting anything
     try:
         preload_caches()
     except Exception as e:
         print(f"❌ Cache preload failed: {e}")
         import traceback; traceback.print_exc()
 
-    # ✅ Run scheduler in a SocketIO-safe background thread
+    # Start scheduler in background
     def run_scheduler():
         with app.app_context():
             try:
-                print("🔍 DEBUG: Calling start_scheduler() in background task...")
                 start_scheduler()
-                print("🔍 DEBUG: start_scheduler() completed")
             except Exception as e:
-                print(f"❌ Scheduler failed to start: {e}")
+                print(f"❌ Scheduler failed: {e}")
                 import traceback; traceback.print_exc()
 
     socketio.start_background_task(run_scheduler)
 
-    print(f"🔍 DEBUG: Starting SocketIO server on port {port}...")
-    socketio.run(
-        app,
-        host="0.0.0.0",
-        port=port,
-        debug=True,
-        use_reloader=False
-    )
+    # Only run this if running locally
+    socketio.run(app, host="0.0.0.0", port=port, debug=True)
+
 
