@@ -25,7 +25,7 @@ import string
 import concurrent.futures
 import re
 import pandas as pd
-
+import os
 
 from models.db_models import db, SafeURL, SafeDomain, PhishingURL, BlacklistURL, BlacklistDomain, BlacklistIP, Notification, BlockedURL, User
 from predict_url import predict_url
@@ -1684,9 +1684,13 @@ def recent_urls():
 
 # ---------------- Main Entrypoint ----------------
 if __name__ == '__main__':
+    import os
     print("\n" + "=" * 70)
     print("🔍 DEBUG: Starting application")
     print("=" * 70)
+
+    # Get the port from Render's environment variable, default to 5000 if not set
+    port = int(os.environ.get("PORT", 5000))
 
     # Preload caches before starting anything
     try:
@@ -1708,5 +1712,12 @@ if __name__ == '__main__':
 
     socketio.start_background_task(run_scheduler)
 
-    print("🔍 DEBUG: Starting SocketIO server...")
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    print(f"🔍 DEBUG: Starting SocketIO server on port {port}...")
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        debug=True,
+        use_reloader=False
+    )
+
