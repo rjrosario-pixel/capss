@@ -1690,6 +1690,7 @@ if __name__ == "__main__":
     print("🔍 DEBUG: Starting application (local dev mode)")
     print("=" * 70)
 
+    # Preload caches before starting anything
     try:
         preload_caches()
     except Exception as e:
@@ -1707,10 +1708,13 @@ if __name__ == "__main__":
 
     socketio.start_background_task(run_scheduler)
 
-    # Only run this if running locally (not via Gunicorn)
+    # Only run the SocketIO dev server locally
+    # In production (Render), Gunicorn will handle binding to $PORT
     if os.environ.get("RENDER") != "true":
         port = int(os.environ.get("PORT", 5000))
-        socketio.run(app, host="0.0.0.0", port=port, debug=True)
+        print(f"🔹 Running local dev server on port {port}")
+        socketio.run(app, host="0.0.0.0", port=port, debug=True, use_reloader=False)
+
 
 
 
