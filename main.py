@@ -26,7 +26,6 @@ import concurrent.futures
 import re
 import pandas as pd
 import os
-print("🔹 ENV VARS:", os.environ)
 
 
 from models.db_models import db, SafeURL, SafeDomain, PhishingURL, BlacklistURL, BlacklistDomain, BlacklistIP, Notification, BlockedURL, User
@@ -1691,19 +1690,13 @@ if __name__ == "__main__":
     print("🔍 DEBUG: Starting application (local dev mode)")
     print("=" * 70)
 
-    # Detect PORT (Render provides this; local = 5000)
-    port = int(os.environ.get("PORT", 5000))
-
-    # Detect if running on Render
-    RUNNING_ON_RENDER = os.environ.get("RENDER") == "true"
-
     try:
         preload_caches()
     except Exception as e:
         print(f"❌ Cache preload failed: {e}")
         import traceback; traceback.print_exc()
 
-    # Start scheduler in background (works both locally + Render)
+    # Start scheduler in background
     def run_scheduler():
         with app.app_context():
             try:
@@ -1714,14 +1707,11 @@ if __name__ == "__main__":
 
     socketio.start_background_task(run_scheduler)
 
-    # 🚨 IMPORTANT:
-    # Do NOT run socketio.run() on Render.
-    # Gunicorn handles production.
-    if not RUNNING_ON_RENDER:
-        print("🔍 Running in LOCAL mode using socketio.run()...")
+    # Only run this if running locally (not via Gunicorn)
+    if os.environ.get("RENDER") != "true":
+        port = int(os.environ.get("PORT", 5000))
         socketio.run(app, host="0.0.0.0", port=port, debug=True)
-    else:
-        print("⚠️ Detected RENDER environment — Gunicorn will run the app.")
+
 
 
 
