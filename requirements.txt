@@ -1,6 +1,11 @@
 Flask
 Flask-SQLAlchemy
 Flask-Migrate
+Flask-Cors
+flask-login
+flask-bcrypt
+Flask-SocketIO
 psycopg2-binary
 joblib
 scikit-learn
+gunicorn
