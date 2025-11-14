@@ -26,6 +26,8 @@ import concurrent.futures
 import re
 import pandas as pd
 import os
+print("🔹 ENV VARS:", os.environ)
+
 
 from models.db_models import db, SafeURL, SafeDomain, PhishingURL, BlacklistURL, BlacklistDomain, BlacklistIP, Notification, BlockedURL, User
 from predict_url import predict_url
