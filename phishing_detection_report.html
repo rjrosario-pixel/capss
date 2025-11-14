@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .acc-badge {
+            background: #f39c12;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        .card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+            font-size: 1em;
+        }
+        .card .value {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: var(--dark);
+            font-family: monospace;
+        }
+        .card .label {
+            font-size: 0.85em;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        .cm-heatmap {
+            padding: 30px;
+            text-align: center;
+        }
+        canvas {
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+        .features {
+            padding: 30px;
+        }
+        .feature-bar {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+        }
+        .feature-name {
+            width: 220px;
+            font-weight: 500;
+        }
+        .bar-container {
+            flex: 1;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 15px;
+        }
+        .bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        .bar-value {
+            width: 100px;
+            text-align: right;
+            font-weight: bold;
+            color: var(--dark);
+            font-family: monospace;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .success { color: var(--success); }
+        .danger { color: var(--danger); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Phishing Detection Report</h1>
+            <p>Generated on 2025-10-26 20:39:18</p>
+            <div class="badge acc-badge">Accuracy: 0.9758 (97.58%)</div>
+        </header>
+
+        <div class="metrics">
+            <div class="card"><h3>Total Tested</h3><div class="value">10,000</div></div>
+            <div class="card"><h3>Precision</h3><div class="value success">0.9907 (99.07%)</div><div class="label">True pos / Predicted phishing</div></div>
+            <div class="card"><h3>Recall</h3><div class="value success">0.9606 (96.06%)</div><div class="label">True pos / Actual phishing</div></div>
+            <div class="card"><h3>F1-Score</h3><div class="value success">0.9754 (97.54%)</div><div class="label">Harmonic mean of P&R</div></div>
+            <div class="card"><h3>True Positives</h3><div class="value success">4,803</div></div>
+            <div class="card"><h3>False Positives</h3><div class="value danger">45</div></div>
+            <div class="card"><h3>False Negatives</h3><div class="value danger">197</div></div>
+            <div class="card"><h3>True Negatives</h3><div class="value success">4,955</div></div>
+        </div>
+
+        <div class="cm-heatmap">
+            <h2>Confusion Matrix</h2>
+            <canvas id="cmChart"></canvas>
+        </div>
+
+        <div class="features">
+            <h2>Top 10 Most Important Features</h2>
+    
+            <div class="feature-bar">
+                <div class="feature-name">Sslfinal State</div>
+                <div class="bar-container"><div class="bar" style="width: 26.18%"></div></div>
+                <div class="bar-value">0.2618 (26.18%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Sub Domain</div>
+                <div class="bar-container"><div class="bar" style="width: 22.29%"></div></div>
+                <div class="bar-value">0.2229 (22.29%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Url Having Ip</div>
+                <div class="bar-container"><div class="bar" style="width: 14.35%"></div></div>
+                <div class="bar-value">0.1435 (14.35%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Age Of Domain</div>
+                <div class="bar-container"><div class="bar" style="width: 11.28%"></div></div>
+                <div class="bar-value">0.1128 (11.28%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Check Dns</div>
+                <div class="bar-container"><div class="bar" style="width: 7.11%"></div></div>
+                <div class="bar-value">0.0711 (7.11%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Prefix Suffix</div>
+                <div class="bar-container"><div class="bar" style="width: 3.58%"></div></div>
+                <div class="bar-value">0.0358 (3.58%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Url Length</div>
+                <div class="bar-container"><div class="bar" style="width: 3.35%"></div></div>
+                <div class="bar-value">0.0335 (3.35%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Url Short</div>
+                <div class="bar-container"><div class="bar" style="width: 2.74%"></div></div>
+                <div class="bar-value">0.0274 (2.74%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Favicon</div>
+                <div class="bar-container"><div class="bar" style="width: 2.09%"></div></div>
+                <div class="bar-value">0.0209 (2.09%)</div>
+            </div>
+        
+            <div class="feature-bar">
+                <div class="feature-name">Domain Registration</div>
+                <div class="bar-container"><div class="bar" style="width: 1.79%"></div></div>
+                <div class="bar-value">0.0179 (1.79%)</div>
+            </div>
+        
+        </div>
+        <footer>
+            Model: Random Forest | Features: 33 | Test Set: 10,000 URLs
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('cmChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['True Safe', 'True Phishing'],
+                    datasets: [
+                        {
+                            label: 'Predicted Safe',
+                            data: [4955, 197],
+                            backgroundColor: '#27ae60'
+                        },
+                        {
+                            label: 'Predicted Phishing',
+                            data: [45, 4803],
+                            backgroundColor: '#e74c3c'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.dataset.label}: ${ctx.raw}`
+                            }
+                        },
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: { display: true, text: 'Count' }
+                        },
+                        y: {
+                            stacked: true,
+                            title: { display: true, text: 'Actual Label' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

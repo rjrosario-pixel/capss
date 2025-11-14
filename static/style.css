@@ -1,0 +1,1358 @@
+/* ========================== Reset & Base ========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body, html {
+  height: 100%;
+  background: #f2f4ff;
+  color: #333;
+}
+
+/* ========================== Backgrounds ========================== */
+.background {
+  background:#003b9f;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ========================== Login Box ========================== */
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+}
+
+.login-box h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.login-box p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Center the logo and control size */
+.logo-container {
+  text-align: center;   /* centers the image */
+  margin-bottom: 5px;  /* space below the logo */
+}
+
+.logo-login {
+  width: 120px;         /* adjust size (try 80px–150px) */
+  height: auto;         /* keeps aspect ratio */
+  border-radius: 12px;  /* optional: rounded corners */
+  object-fit: contain;  /* prevents stretching */
+}
+
+/* ========================== Forms & Inputs ========================== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input[disabled] {
+  background: #f3f3f3;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.text-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.text-label label {
+  font-weight: normal;
+}
+
+.forgot {
+  font-size: 12px;
+  color: #0057ec;
+  text-decoration: none;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+/* ========================== Buttons ========================== */
+button {
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  align-items: center;
+}
+
+
+
+.bottom-text {
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.bottom-text a {
+  color: #0057ec;
+  text-decoration: none;
+}
+
+.submit-btn {
+  background-color: #003b9f;
+  color: white;
+}
+
+.error-message {
+  color: #ff4444;
+  padding: 5px;
+  text-align: center;
+  display: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.success-message {
+  color: #00c851;
+  padding: 5px;
+  text-align: center;
+  display: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ========================== Header & Nav ========================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+nav a.active {
+  background-color: #003b9f;
+  color: white;
+}
+
+/* Keep the profile items tight */
+.profile {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  gap: 6px; /* small gap, adjust as needed */
+}
+
+/* Make the bell icon match the previous emoji size */
+.profile .bell img {
+  width: 27px;
+  height: 27px;
+  display: block; /* remove inline spacing */
+}
+
+/* Adjust badge position */
+.profile .notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 10px;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.notif-header .time-ago {
+  color: #666;
+  font-size: 0.95em;
+}
+
+/* style.css */
+#clear-notifications {
+  background-color: #003082;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#clear-notifications:hover {
+  background-color: #023792;
+}
+
+/* Style for the scanned URL in notifications */
+.notif-url {
+    font-weight: bold;
+    font-size: 0.75rem;
+    margin: 4px 0;
+    word-break: break-all;
+}
+
+.notif-url.safe-url {
+    color: #00245c; /* blue for safe URLs */
+}
+
+.notif-url.phish-url {
+    color: #ca0700; /* red for phishing URLs */
+}
+
+
+
+/* ========================== Hamburger Menu ========================== */
+#hamburger {
+  display: none;
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #003082;
+}
+
+#main-nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  #hamburger {
+    display: block;
+  }
+
+  #main-nav {
+    display: none;
+    flex-direction: column;
+    background: white;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+  }
+
+  #main-nav.visible {
+    display: flex;
+  }
+}
+
+/* ========================== Main Container ========================== */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 30px 0;
+  background: #d3dcef;
+  min-height: calc(100vh - 70px);
+}
+/* ========================== Scanner Box ========================== */
+.scanner-box {
+  margin: px;
+  background: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;  /* stack children vertically */
+  justify-content: center; /* center vertically */
+  align-items: center;     /* center horizontally */
+  text-align: center;
+  gap: 15px;               /* consistent spacing between elements */
+}
+
+/* Header */
+.scanner-box h2 {
+  font-size: 18px;
+  color: #111827;
+  margin: 0; /* remove default bottom margin */
+}
+
+/* Input + Button Row */
+.input-row {
+  display: flex;
+  gap: 10px;               /* small gap between input and button */
+  justify-content: center;  /* center horizontally */
+  width: auto;
+}
+
+/* Input field */
+.input-row input[type="text"] {
+  width: 350px;            /* smaller width to fit button */
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+}
+
+/* Scan button */
+.input-row button {
+  padding: 12px 20px;
+  background-color: #003b9f;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.input-row button:hover {
+  background-color: #003082;
+}
+
+/* Progress bar */
+#progressContainer {
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Scan result */
+#result {
+  font-weight: bold;
+}
+
+/* Block button */
+#blockBtn {
+  padding: 12px 20px;
+  background-color: #bf1e2d;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#blockBtn:hover {
+  background-color: #a11726;
+}
+
+#progressMessage {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #333;
+    min-height: 18px; /* optional: keeps space even when empty */
+}
+
+
+/* ========================== Dashboard & Cards ========================== */
+.dash-body {
+  background-color: #f7f9fc;
+  color: #333;
+}
+
+.container {
+  padding: 2rem;
+}
+
+.status-cards {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  flex: 1 1 200px;
+}
+
+.card.green { border-left: 6px solid #28a745; }
+.card.red { border-left: 6px solid #dc3545; }
+.card.yellow { border-left: 6px solid #ffc107; }
+.card.gray { border-left: 6px solid #6c757d; }
+
+.chart-section {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+}
+
+.chart-placeholder {
+  height: 200px;
+  background: #e9ecef;
+  border-radius: 8px;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #888;
+}
+
+/* ========================== Tables ========================== */
+.history, .table-container {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+table, .responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+/* Default cells */
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+/* Center specific headers or cells */
+th.center-column,
+td.center-column {
+  text-align: center !important;
+}
+
+
+
+/* Center alignment for specific columns */
+.center-column {
+  text-align: center;
+}
+
+/* ========================== Status badge styles ========================== */
+.status {
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-weight: 600;
+  color: white;
+  
+}
+
+/* Phish status (red, bigger text) */
+.status-phish {
+  background-color:#e31414; /* Light red background */
+  color: #ffffff;            /* Dark red text */
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.status-blocked {
+  background-color:#333030; /* Light red background */
+  color: #ffffff;            /* Dark red text */
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+
+/* Safe status (green badge) */
+.status-safe {
+  font-size: 0.9rem;
+  background: #006a2c; /* green */
+  color: white; 
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+
+/* Icon button (delete/edit/etc.) */
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Delete icon */
+.delete-icon {
+  width: 28px;
+  height: 28px;
+}
+
+#clear-history-btn {
+  background-color: #003082;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#clear-history-btn:hover {
+  background-color: #00245c; /* a darker shade on hover */
+}
+
+/* Limit column widths */
+.responsive-table th:nth-child(3), /* IP Address */
+.responsive-table td:nth-child(3) {
+  width: 150px;        /* adjust size */
+  white-space: nowrap; /* prevent wrapping */
+  text-align: center;
+}
+
+.responsive-table th:nth-child(4), /* Status */
+.responsive-table td:nth-child(4) {
+  width: 120px;        /* smaller fixed width */
+  text-align: center;  /* keep status centered */
+}
+
+/* Reduce the status badge size */
+.status {
+  display: inline-block;
+  min-width: 80px;      /* shrink from 100px */
+  font-size: 0.8rem;    /* smaller text */
+  padding: 0.2rem 0.4rem;
+}
+
+
+
+
+.status.safe { background: #239b3f; }
+.status.unknown { background: #ffc107; color: #212529; }
+.status.phish { background: #dc3545; }
+
+/* ========================== Notification System ========================== */
+.notification-wrapper { position: relative; display: inline-block; }
+.bell { font-size: 20px; cursor: pointer; position: relative; }
+.notif-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+  z-index: 1;
+}
+.notification-panel {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: 300px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  display: none;
+  z-index: 99;
+}
+.notification-panel.show { opacity: 1; visibility: visible; }
+.panel-header { padding: 10px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; background: #f4f4f4; }
+.panel-header h4 { margin: 0; }
+.panel-body { max-height: 300px; overflow-y: auto; padding: 10px; }
+.notification-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 14px; }
+.notification-item .time { float: right; color: gray; font-size: 11px; }
+
+/* ========================== Dropdown ========================== */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: -15px;   /* 👈 negative = moves right, positive = moves left */
+  top: 57px;      /* distance from button */
+  background-color: white;
+  min-width: 120px;  /* wider menu if needed */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dropdown-content button {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  text-align: center;
+  cursor: pointer;
+  color: #111827;
+}
+
+.dropdown-content button:hover { 
+  background-color: #003082;
+  color: white;
+}
+
+/* ========================== Progress Bar ========================== */
+/* Hide by default */
+#progressContainer {
+  display: none;
+  margin-top: 10px;
+  background: #f0f2f5;
+  border-radius: 10px;
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+#progressBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #55688a, #003082);
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+#progressMessage {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+#result {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+
+
+
+
+/* ========================== Alerts ========================== */
+.alert {
+  margin: 10px 0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+.alert.success {
+  background-color: #e6f9e6;
+  color: #2e7d32;
+  border-color: #c3e6cb;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================== Tables ========================== */
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.responsive-table th, .responsive-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* ========================== Scanner Info Card ========================== */
+.info-card {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #e0e0e0;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.info-card h3 {
+  font-size: 1.4rem;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.info-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 15px;
+}
+
+.info-card ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.info-card ul li {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+/* ========================== Guest Label ========================== */
+.guest-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  margin-right: 8px;
+  font-style: bold;
+}
+
+/* ========================== Media Queries ========================== */
+@media (max-width: 768px) {
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    padding: 10px 16px;
+  }
+
+  .logo {
+    order: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  #hamburger {
+    display: block;
+    font-size: 22px;
+    margin-left: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #003082;
+  }
+
+  #main-nav {
+    display: none;
+    flex-direction: column;
+    background: white;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+  }
+
+  #main-nav.visible {
+    display: flex;
+  }
+
+  .notification-nav {
+    order: 1;
+    margin-left: 10px;
+  }
+
+  #nav-user {
+    order: 2;
+  }
+
+  .dropdown {
+    order: 3;
+  }
+
+  .responsive-table th, .responsive-table td {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .responsive-table td:nth-child(1),
+  .responsive-table th:nth-child(1),
+  .responsive-table td:nth-child(2),
+  .responsive-table th:nth-child(2) {
+    max-width: 120px;
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .info-card h3 {
+  color: #001c4c;
+  margin-left: 20px;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.info-card h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  background: #003082;
+  border-radius: 2px;
+}
+
+  .info-card p,
+  .info-card ul li {
+    font-size: 0.9rem;
+    margin-left: 25px;
+  }
+}
+
+/* ========================== Parent Container ========================== */
+.scanner-stats-container {
+  display: flex;
+  gap: 10px; /* Maintain the good gap */
+  margin: 28px 0 0 15px;
+  align-items: flex-start;
+  flex-wrap: wrap; /* wrap for mobile */
+  width: 99%;
+}
+
+/* ========================== Left Column (Scanner + Info) ========================== */
+.left-column {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Match container gap */
+  width: 100%; /* Ensure left-column takes full available width */
+  align-items: stretch; /* Ensure children stretch to full width */
+}
+
+/* ========================== Scanner Box ========================== */
+.scanner-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  width: 100%; /* Explicitly set to match info-card */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  min-width: 0; /* Prevent overflow from long content */
+  flex: 0 0 100%; /* Fixed width at 100% */
+  max-width: 100%; /* Ensure no overflow */
+}
+
+/* ========================== Info Card (PREMIUM DESIGN) ========================== */
+.info-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 28px;
+  margin-top: 0;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  gap: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  flex: 0 0 100%;
+  max-width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #003082, #0040a8, #0055d4);
+  border-radius: 18px 18px 0 0;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.12),
+    0 6px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Title with elegant underline */
+.info-card h3 {
+  color: #001c4c;
+  margin: 0 0 16px 28px;
+  font-weight: 900;
+  font-size: 1.4rem;
+  position: relative;
+  padding-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.info-card h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, #003082, #004ed4);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 48, 130, 0.2);
+}
+
+/* Body text & list */
+.info-card p,
+.info-card ul {
+  margin: 0 0 14px 28px;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #2d3748;
+  font-style: normal;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  
+}
+
+.info-card ul {
+  padding-left: 18px;
+  list-style: none;
+}
+
+.info-card ul li {
+  font-size: 0.85rem;
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 10px;
+  color: #2d3748;
+}
+
+.info-card ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #003082;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* ========================== Stats Container ========================== */
+.stats-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+  margin-right: 20px;
+  height: 540px;
+  
+  /* Darker, Richer Gradient – No Light Blue */
+  background: linear-gradient(180deg, #001a45 0%, #002a6b 40%, #012768 100%);
+  
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for depth */
+}
+
+/* ========================== Stat Cards ========================== */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #00308200;
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.stat-icon img { height: 40px; margin-bottom: 10px; }
+.stat-number { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+.stat-label { font-size: 14px; text-align: center; }
+
+/* ========================== Desktop Layout ========================== */
+@media (min-width: 500px) {
+  .scanner-stats-container {
+    flex-direction: row;
+  }
+  .left-column {
+    width: 100%; /* Maintain full width for consistency */
+    display: flex; /* Ensure flex context */
+    flex: 3; /* Maintain proportion */
+    align-items: stretch; /* Ensure children stretch */
+  }
+  .scanner-box {
+    width: 100%; /* Ensure full width within left-column */
+    flex: 0 0 100%; /* Fixed width at 100% */
+  }
+  .info-card {
+    width: 100%; /* Ensure full width within left-column */
+    flex: 0 0 100%; /* Match scanner-box distribution */
+  }
+  .stats-container {
+    width: auto;
+    flex: 1; /* Maintain proportion */
+  }
+}
+
+/* ========================== Responsive: Mobile ========================== */
+@media (max-width: 768px) {
+  .scanner-stats-container {
+    flex-direction: column !important; /* Stack all vertically */
+    align-items: stretch !important; /* Ensure full width */
+    display: flex !important; /* Reinforce flexbox */
+    gap: 10px !important; /* Maintain the good gap */
+    margin: 0; /* Match outer margins for consistency */
+    width: 100%; /* Ensure full container width */
+  }
+  .left-column {
+    display: contents !important; /* Treat children as direct flex items */
+    width: 100%; /* Ensure full width */
+  }
+  /* Explicit stack order: scanner-box → stats-container → info-card */
+  .scanner-stats-container .scanner-box {
+    order: 1 !important; /* Scanner first */
+    width: 97% !important; /* Full width */
+    background-color: #fff; /* White for scanner */
+    margin: 10px;
+    flex: 0 0 100%; /* Fixed width at 100% */
+  }
+  .scanner-stats-container .stats-container {
+    order: 2 !important; /* Stats second */
+    width: 100% !important; /* Full width to match scanner and info */
+    flex-direction: row !important; /* Horizontal layout for stat cards */
+    justify-content: space-between !important; /* Evenly distribute stat cards */
+    margin: 10px 0; /* Reduced margin to minimize gaps */
+    background-color: #003082; /* Blue for stats */
+    padding: 10px; /* Consistent padding */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+    border-radius: 0px;
+  }
+  .scanner-stats-container .info-card {
+    order: 3 !important; /* Info last */
+    width: 97% !important; /* Ensure full width */
+    margin: 10px;
+    padding: 20px; /* Match scanner-box padding */
+    background-color: #f9f9f9; /* Light gray for info */
+    flex: 0 0 100%; /* Match scanner-box width */
+  }
+  .scanner-stats-container .stat-card {
+    flex: 1 1 0 !important; /* Equal width for each stat card */
+    margin: 0 5px; /* Small margin between cards */
+    min-width: 0; /* Prevent flex items from overflowing */
+    text-align: center; /* Ensure text alignment */
+  }
+}
+
+/* ================== Recently Checked URLs ================== */
+.recent-urls-box {
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.159);
+  margin-left: 60px;
+  margin-right: 35px;
+  width: 90%;
+  max-height: 650px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* ✅ Aligns to the left */
+}
+
+.recent-urls-box h3 {
+  color: #001c4c;
+  text-align: left;
+  margin: 0 0 0px 25px;
+  font-weight: 800;
+  font-size: 1.4rem;
+  position: relative;
+  padding-bottom: 12px;
+  letter-spacing: -0.5px;
+  padding-top: 15px;
+}
+
+.recent-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* ✅ Table layout for recent URLs */
+.recent-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.3rem;
+  font-size: 14px;
+  table-layout: fixed;
+}
+
+.recent-table thead {
+  background-color: #e9ecef00;
+}
+
+.recent-table th {
+  padding: 0.48rem;
+  font-weight:bold;
+  font-size: 18px;
+  color: #060f326c;
+  border-bottom: none;
+  vertical-align: middle;
+}
+
+.recent-table td {
+  height: 45px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.recent-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ✅ Desktop column alignment */
+.recent-table th:nth-child(1),
+.recent-table td:nth-child(1) {
+  text-align: left;
+  width: 50%;
+}
+
+.recent-table th:nth-child(2),
+.recent-table td:nth-child(2) {
+  text-align: center;
+  width: 25%;
+}
+
+.recent-table th:nth-child(3),
+.recent-table td:nth-child(3) {
+  text-align: right;
+  width: 25%;
+}
+
+/* ✅ URL text styling */
+.url-text {
+  color: #0c0c6f;
+  word-break: break-all;
+  font-size: 15px;
+}
+
+/* ================== Result Badge Styles (matching history table) ================== */
+.result-safe,
+.result-phish,
+.result-blocked,
+.result-unknown {
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-weight: 600;
+  color: white;
+  font-size: 0.73rem;
+  line-height: 1.2;
+  width: 85px;
+}
+
+/* Individual result colors (matching history) */
+.result-safe {
+  background-color: #006a2c;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.result-phish {
+  background-color: #e31414;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.result-blocked {
+  background-color: #333030;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.result-unknown {
+  background-color: #ffc107;
+  color: #212529;
+  font-weight: bold;
+}
+
+/* ✅ Timestamp/status text */
+.status-time {
+  color: #555;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ================== Responsive Small Screen ================== */
+@media (max-width: 768px) {
+  .recent-urls-box {
+    margin-left: 10px;
+    width: 95%;
+    padding: 10px;
+  }
+
+  .recent-table th,
+  .recent-table td {
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  /* ✅ Exact column widths for mobile */
+  .recent-table th:nth-child(1),
+  .recent-table td:nth-child(1) {
+    width: 60%;
+    text-align: left;
+  }
+
+  .recent-table th:nth-child(2),
+  .recent-table td:nth-child(2) {
+    width: 20%;
+    text-align: center;
+  }
+
+  .recent-table th:nth-child(3),
+  .recent-table td:nth-child(3) {
+    width: 20%;
+    text-align: right;
+  }
+
+  /* ✅ Truncate long URLs on mobile */
+  .url-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+    font-size: 11px;
+  }
+
+  /* ✅ Smaller badges on mobile */
+  .result-safe,
+  .result-phish,
+  .result-blocked,
+  .result-unknown {
+    min-width: 75px;
+    padding: 0.25rem 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  /* ✅ Smaller timestamp text */
+  .status-time {
+    font-size: 10px;
+  }
+}
+
+/* ================== Extra Small Screens ================== */
+@media (max-width: 480px) {
+  .recent-table th,
+  .recent-table td {
+    padding: 6px;
+    font-size: 10px;
+  }
+
+  .recent-table th:nth-child(1),
+  .recent-table td:nth-child(1) {
+    width: 40%;
+  }
+
+  .recent-table th:nth-child(2),
+  .recent-table td:nth-child(2) {
+    width: 28%;
+  }
+
+  .recent-table th:nth-child(3),
+  .recent-table td:nth-child(3) {
+    width: 32%;
+  }
+
+  .url-text {
+    font-size: 9px;
+  }
+
+  .result-safe,
+  .result-phish,
+  .result-blocked,
+  .result-unknown {
+    min-width: 45px;
+    padding: 0.2rem 0.3rem;
+    font-size: 0.65rem;
+  }
+
+  .status-time {
+    font-size: 9px;
+  }
+}

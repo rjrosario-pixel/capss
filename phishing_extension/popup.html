@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TerraPhish Scanner</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-box" role="dialog" aria-labelledby="app-title" aria-describedby="desc">
+    <header class="popup-header">
+      <div class="logo">
+        <!-- simple decorative mark — purely visual -->
+        <img src="logos.png" alt="TerraPhish Logo" class="logo-img">        
+      </div>
+      <div class="meta">
+        <p id="current-url" class="current-url" style="font-size: 12px; color: #555; word-break: break-all;"></p>
+      </div>
+    </header>
+
+    <main class="popup-content" id="desc">
+      <p class="lead">Quickly check whether the current site is safe.</p>
+
+      <section id="scan-section" class="scan-section" aria-live="polite">
+        <button id="scan-btn" class="btn primary" type="button">Scan Current Site</button>
+
+        <!-- result text (filled by popup.js) -->
+        <p id="result" class="scan-result" aria-atomic="true"></p>
+
+        <button id="block-btn" class="block-btn" style="display: none;" type="button">Block This Site</button>
+      </section>
+    </main>
+
+    <footer class="popup-footer">
+      <div id="historyLink" class="bottom-link" style="display: none;">
+        <a href="http://127.0.0.1:5000/dashboard" target="_blank" rel="noopener">View Scan History</a>
+      </div>
+
+      <div id="loginReminder" class="login-reminder" style="display: none;">
+        Please <a href="http://127.0.0.1:5000/login" target="_blank" rel="noopener">log in</a> to use all features.
+      </div>
+
+      <small class="version">TerraPhish • 2025</small>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

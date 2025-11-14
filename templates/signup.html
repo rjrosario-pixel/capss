@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TERRAPhish - Signup</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="background">
+    <div class="login-box">
+      <div class="logo-container">
+      <img src="{{ url_for('static', filename='logo1.png') }}" alt="Logo" class="logo-login">
+    </div>
+      <h2>Create an Account</h2>
+
+      <form id="signup-form" method="POST">
+        <label class="text-label" for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+        <label class="text-label" for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Username" required />
+
+        <label class="text-label" for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="●●●●●●●" required />
+
+        <button type="submit" class="submit-btn">Sign Up</button>
+        
+        <!-- Error/Success message displays here -->
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+      </form>
+
+      <p class="bottom-text">
+        Already have an account? <a href="/login">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("signup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      
+      const errorDiv = document.getElementById("error-message");
+      const successDiv = document.getElementById("success-message");
+      
+      // Hide previous messages
+      errorDiv.style.display = "none";
+      successDiv.style.display = "none";
+
+      try {
+        const res = await fetch("/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, username, password })
+        });
+
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          
+          if (res.ok) {
+            // Show success message
+            successDiv.textContent = data.message;
+            successDiv.style.display = "block";
+            
+            // Redirect after 1.5 seconds
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 1500);
+          } else {
+            // Show error message
+            errorDiv.textContent = data.message;
+            errorDiv.style.display = "block";
+          }
+        } catch (e) {
+          console.error("Not valid JSON:", text);
+          errorDiv.textContent = "Unexpected server response.";
+          errorDiv.style.display = "block";
+        }
+      } catch (error) {
+        errorDiv.textContent = "Error occurred: " + error.message;
+        errorDiv.style.display = "block";
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>

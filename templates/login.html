@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TERRAPhish - Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="background">
+  <div class="login-box">
+
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='logo1.png') }}" alt="Logo" class="logo-login">
+    </div>
+
+    <h2>Login to Account</h2>
+    <p>Please enter your email and password to continue</p>
+
+      <form id="login-form" action="/login" method="POST">
+    <label class="text-label">Email address:</label>
+    <input type="email" id="email" placeholder="Enter E-mail" required />
+
+    <div class="text-label">
+      <label>Password</label>
+      <a href="{{ url_for('forgot_password') }}" class="forgot">Forgot Password?</a>
+    </div>
+    <input type="password" id="password" placeholder="●●●●●●●" required />
+
+    <button type="submit" class="submit-btn">Sign In</button>
+  </form>
+
+  <p id="error-message" style="color: red; margin-top: 10px; display: none; font-weight: bold;"></p>
+
+    <p class="bottom-text">
+      Don't have an account? <a href="/signup">Create Account</a>
+    </p>
+  </div>
+</div>
+
+
+<script>
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorMsg = document.getElementById("error-message");
+
+  // Clear old message
+  errorMsg.style.display = "none";
+  errorMsg.textContent = "";
+
+  try {
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, password })
+    });
+
+    // try parsing JSON safely
+    let data = {};
+    try { data = await res.json(); } catch {}
+
+    if (res.ok) {
+      window.location.href = "/dashboard";
+    } else {
+      errorMsg.textContent = data.message || "Incorrect email or password.";
+      errorMsg.style.display = "block";
+    }
+
+  } catch (error) {
+    errorMsg.textContent = "Connection error. Please try again.";
+    errorMsg.style.display = "block";
+    console.error(error);
+  }
+});
+</script>
+
+</body>
+</html>

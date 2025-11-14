@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERRAPhish - Scanner</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="left-section">
+    <!-- LOGO & HAMBURGER -->
+    <div class="logo">
+      <img src="/static/logo.png" alt="logo" />
+      <button id="hamburger" class="menu-toggle" title="Menu">☰</button>
+    </div>
+  </div>
+
+  <!-- NAV LINKS -->
+  <nav id="main-nav" class="nav-links">
+    <a href="{{ url_for('scanner') }}" class="active">URL and Domain Scanner</a>
+    <a href="{{ url_for('block_page') }}">Blocking</a>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+  </nav>
+
+<!-- PROFILE -->
+<div class="profile">
+  <nav class="notification-nav">
+    {% if current_user.is_authenticated %}
+      <!-- Bell only when logged in -->
+      <span class="bell" id="notif-bell" title="Notifications">
+        <img src="{{ url_for('static', filename='notif_icon.png') }}" alt="Notifications">
+        <span class="notif-badge" id="notif-count" style="display: none;">0</span>
+      </span>
+    {% endif %}
+  </nav>
+
+  {% if current_user.is_authenticated %}
+    <!-- Logged in user -->
+    <span id="nav-user">{{ current_user.username }}</span>
+    <div class="dropdown">
+      <button id="menu-btn" class="menu-btn" title="Menu">⋮</button>
+      <div class="dropdown-content" id="dropdown-menu">
+        <form method="POST" action="{{ url_for('logout') }}">
+          <button type="submit" class="in-out">Log Out</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <!-- Guest -->
+    <span id="nav-user" class="guest-label">Guest</span>
+    <div class="dropdown">
+      <button id="menu-btn" class="menu-btn" title="Menu">⋮</button>
+      <div class="dropdown-content" id="dropdown-menu">
+        <form method="GET" action="{{ url_for('login_page') }}">
+          <button type="submit" class="in-out">Log In</button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>
+</header>
+
+<!-- Notification Panel -->
+<div class="notification-panel" id="notification-panel" style="display: none;">
+  <div class="panel-header">
+    <h4>Notifications</h4>
+    <button id="clear-notifications">Clear All</button>
+  </div>
+  <div class="panel-body" id="notification-list"></div>
+</div>
+
+<div class="scanner-stats-container">
+  <!-- Left Column: Scanner + Info -->
+  <div class="left-column">
+    <div class="scanner-box">
+      <h2>Scan Here to Check If the Link Is a Phishing Threat!</h2>
+      <div class="input-row">
+        <input type="text" id="urlInput" placeholder="Type any URL or Domain">
+        <button id="scanBtn">Scan</button>
+      </div>
+
+      <!-- Progress Bar Container -->
+      <div id="progressContainer" style="display:none; margin-top: 10px;">
+        <div id="progressBar" style="width:0%; height: 20px; background-color:#4a90e2; text-align:center; color:white; line-height:20px; border-radius:5px;">
+          0%
+        </div>
+      </div>
+
+      <div id="progressMessage" style="margin-top:5px; font-size:14px; color:#333;">
+  </div>
+
+      <!-- Result -->
+      <div id="result" style="margin-top:10px; font-weight:bold;"></div>
+
+      <!-- Block Button -->
+      <button id="blockBtn" style="display:none; margin-top:10px;">Block This URL</button>
+    </div>
+
+    <div class="info-card">
+      <h3>TERRAPHISH</h3>
+      <p>
+        TerraPhish is your personal phishing scanner that checks URLs and domains for potential threats.
+        It combines real-time scanning, blacklist checks, and advanced machine learning to detect suspicious or malicious websites.
+        With TerraPhish, you can quickly see if a site is safe, risky, or already blocked.
+      </p>
+      <ul>
+        <li>Scan any URL or domain for phishing threats in real time</li>
+        <li><strong>Chrome extension</strong> lets you scan any link with one click — right from your browser</li>
+        <li>Powered by a trained <strong>Random Forest</strong> model</li>
+        <li>Block malicious URLs directly from the scanner — with one-click protection</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <span class="stat-icon">
+        <img src="{{ url_for('static', filename='user_icon.png') }}" alt="Users">
+      </span>
+      <span class="stat-number" data-stat="users">0</span>
+      <span class="stat-label">Number of Users</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">
+        <img src="{{ url_for('static', filename='scan_icon.png') }}" alt="Scans">
+      </span>
+      <span class="stat-number" data-stat="scans">0</span>
+      <span class="stat-label">Number of scanned URLs</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">
+        <img src="{{ url_for('static', filename='block_icon.png') }}" alt="Blocked URLs">
+      </span>
+      <span class="stat-number" data-stat="blocks">0</span>
+      <span class="stat-label">Number of Blocked URLs</span>
+    </div>
+  </div>
+</div>
+
+<!-- Recently Checked URLs -->
+<div class="recent-urls-box">
+  <h3>Recently Checked URLs</h3>
+
+  <!-- Table Body -->
+  <div id="recentList" class="recent-list">
+    Loading recent URLs...
+  </div>
+</div>
+
+
+
+<script>
+  const menuBtn = document.getElementById("menu-btn");
+  const dropdown = document.getElementById("dropdown-menu");
+  const hamburger = document.getElementById("hamburger");
+  const nav = document.getElementById("main-nav");
+
+  window.addEventListener("click", function (e) {
+    if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+  });
+
+  menuBtn.addEventListener("click", function () {
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  });
+
+  hamburger.addEventListener("click", function () {
+    nav.classList.toggle("visible");
+  });
+
+  // --- Format relative time ---
+  function getTimeAgo(timestamp) {
+    const now = new Date();
+    const then = new Date(timestamp);
+    const diffMs = now - then;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHr / 24);
+
+    const formatTime = (date) => {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      return `${hours}:${minutes} ${ampm}`;
+    };
+
+    const formatFullDate = (date) => {
+      return date.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    };
+
+    if (diffSec < 60) return "just now";
+    if (diffMin < 60) return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
+    if (diffHr < 24) return `${diffHr} hour${diffHr !== 1 ? "s" : ""} ago`;
+    if (diffDays === 1) return `Yesterday, ${formatTime(then)}`;
+    if (diffDays < 7) return `${diffDays} days ago, ${formatTime(then)}`;
+    return formatFullDate(then);
+  }
+
+  function updateTimes() {
+    document.querySelectorAll(".time-ago").forEach(el => {
+      const ts = el.getAttribute("data-timestamp");
+      if (ts) {
+        el.textContent = getTimeAgo(ts);
+      }
+    });
+  }
+  updateTimes();
+  setInterval(updateTimes, 30000);
+
+  // --- Notifications ---
+  function updateNotificationsUI(showPanelTemporarily = false) {
+  const panel = document.getElementById("notification-panel");
+  const list = document.getElementById("notification-list");
+  const badge = document.getElementById("notif-count");
+
+  fetch('/get_notifications')
+    .then(res => res.json())
+    .then(data => {
+      list.innerHTML = "";
+
+      if (data.length > 0) {
+        badge.style.display = "inline-block";
+        badge.textContent = data.length;
+        if (showPanelTemporarily) {
+          panel.style.display = "block";
+          setTimeout(() => { panel.style.display = "none"; }, 3000);
+        }
+      } else {
+        badge.style.display = "none";
+        panel.style.display = "none";
+      }
+
+      data.slice().reverse().forEach(note => {
+        const item = document.createElement("div");
+        item.className = "notification-item";
+
+        const scannedUrl = note.url ? note.url : "URL not available";
+
+        // --- Special case: Safe → Phish ---
+        const isSafeToPhish = /was\s+Safe\s+before/i.test(note.message) &&
+                              /flagged\s+as\s+Phish/i.test(note.message);
+
+        let icon = "ℹ️ INFO";
+        let title = "Info";
+        let desc = note.message;
+        let urlDiv = `<div class="notif-url">${scannedUrl}</div>`;
+
+        if (isSafeToPhish) {
+          icon = "⚠️ ALERT";
+          title = "ALERT";
+          desc = `The URL <strong style="color:red;">${scannedUrl}</strong> was <strong>Safe</strong> before but is now flagged as <strong>Phish</strong>.`;
+          // In this case, do not show separate URL div
+          urlDiv = "";
+        } else if (note.message.includes("Result: Safe")) {
+          // Old format, keeping for backward compatibility
+          icon = "✅ SAFE";
+          title = "Safe";
+          desc = "This site appears to be safe and no threats were detected.";
+        } else if (note.message.startsWith("SAFE:")) {
+          icon = "✅ SAFE";
+          title = "Safe";
+          desc = note.message.substring(6); // Remove "SAFE: "
+        } else if (note.message.startsWith("ALERT:")) {
+          icon = "⚠️ ALERT";
+          title = "ALERT";
+          desc = note.message.substring(7); // Remove "ALERT: "
+        } else if (note.message.includes("manually blocked")) { // More specific than just "blocked"
+          icon = "⛔ BLOCKED";
+          title = "Blocked URL";
+          desc = "This URL has been manually blocked and is inaccessible.";
+        } else if (note.message.startsWith("INFO:")) {
+          icon = "ℹ️ INFO";
+          title = "Info";
+          desc = note.message.substring(6); // Remove "INFO: "
+        }
+
+        item.innerHTML = `
+          <div class="notif-header">
+            <span class="notif-icon">${icon}</span>
+            <span class="time-ago" data-timestamp="${note.timestamp}">${getTimeAgo(note.timestamp)}</span>
+          </div>
+          ${urlDiv}
+          <p><strong>${title}</strong><br>${desc}</p>
+        `;
+
+        list.prepend(item);
+      });
+
+      requestAnimationFrame(() => updateTimes());
+    })
+    .catch(err => console.error("Failed to load notifications:", err));
+}
+
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const bell = document.getElementById("notif-bell");
+    const panel = document.getElementById("notification-panel");
+    const clearBtn = document.getElementById("clear-notifications");
+
+    bell.addEventListener("click", (e) => {
+      e.stopPropagation();
+      panel.style.display = panel.style.display === "block" ? "none" : "block";
+      if (panel.style.display === "block") updateTimes();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      fetch('/clear_notifications', { method: 'POST' })
+        .then(() => {
+          panel.style.display = "none";
+          document.getElementById("notif-count").style.display = "none";
+          document.getElementById("notification-list").innerHTML = "";
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!panel.contains(e.target) && e.target !== bell) {
+        panel.style.display = "none";
+      }
+    });
+
+    updateNotificationsUI(false);
+  });
+
+  // --- Scanner (real-time with Socket.IO) ---
+  (function(){
+    const socket = io({ path: '/socket.io' });
+
+    socket.emit("join", { 
+          user_id: "{{ current_user.id if current_user.is_authenticated else 'guest' }}" 
+        });
+
+    socket.on("joined", data => {
+      console.log("Joined room:", data.room);
+    });
+
+    const scanBtn = document.getElementById("scanBtn");
+    const urlInput = document.getElementById("urlInput");
+    const resultDiv = document.getElementById("result");
+    const progressContainer = document.getElementById("progressContainer");
+    const progressBar = document.getElementById("progressBar");
+    const progressMessage = document.getElementById("progressMessage");
+    const blockBtn = document.getElementById("blockBtn");
+
+    // --- queue system ---
+    const MIN_DELAY = 200; // ms per step
+    let queue = [];
+    let processing = false;
+    let currentScan = 0;
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function processQueue(scanId) {
+      if (processing) return;
+      processing = true;
+      while (queue.length) {
+        const item = queue.shift();
+        if (item.scanId !== scanId) continue;
+
+        // update bar
+        if (item.progress !== undefined) {
+          progressBar.style.width = `${item.progress}%`;
+          progressBar.textContent = `${item.progress}%`;
+        }
+
+        if (item.message) {
+          progressMessage.textContent = `${item.message}`;
+          progressMessage.style.display = "block";
+        }
+
+        if (item.progress === 100 && item.result) {
+          updateNotificationsUI(true);
+
+  // Hide or clear the progressMessage
+  progressMessage.textContent = "";
+  progressMessage.style.display = "none";
+
+  // Show final result
+  resultDiv.innerText = `Result: ${item.result}`;
+  const resultLower = String(item.result).toLowerCase();
+  blockBtn.style.display = (resultLower === "phish" && resultLower !== "already blocked") 
+    ? "inline-block" : "none";
+}
+
+
+        await sleep(MIN_DELAY);
+      }
+      processing = false;
+    }
+
+    socket.on("scan_progress", (data) => {
+      console.log("Progress event:", JSON.stringify(data));
+      progressContainer.style.display = "block";
+      queue.push({ ...data, scanId: currentScan });
+      processQueue(currentScan);
+    });
+
+    scanBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const url = urlInput.value.trim();
+      if (!url) { resultDiv.innerText = "Please enter a URL."; return; }
+
+      // reset
+      currentScan++;
+      queue = [];
+      progressContainer.style.display = "block";
+      progressBar.style.width = "0%";
+      progressBar.textContent = "0%";
+      progressMessage.textContent = "Starting scan...";
+      resultDiv.innerText = "";
+      blockBtn.style.display = "none";
+
+      fetch("/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, manual: true })
+      }).catch(err => {
+        progressMessage.textContent = "Network error";
+        resultDiv.innerText = "Network error.";
+      });
+    });
+  })();
+
+  // --- Dashboard stats animation ---
+  function animateValue(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      element.textContent = Math.floor(progress * (end - start) + start);
+      if (progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  function updateDashboardStats() {
+    fetch('/get_dashboard_stats')
+      .then(res => res.json())
+      .then(data => {
+        animateValue(document.querySelector('.stat-number[data-stat="users"]'), 0, data.users, 3000);
+        animateValue(document.querySelector('.stat-number[data-stat="scans"]'), 0, data.scans, 3000);
+        animateValue(document.querySelector('.stat-number[data-stat="blocks"]'), 0, data.blocks, 3000);
+      })
+      .catch(err => console.error('Error fetching dashboard stats:', err));
+  }
+  updateDashboardStats();
+  setInterval(() => {
+    fetch('/get_dashboard_stats')
+      .then(res => res.json())
+      .then(data => {
+        document.querySelector('.stat-number[data-stat="users"]').textContent = data.users;
+        document.querySelector('.stat-number[data-stat="scans"]').textContent = data.scans;
+        document.querySelector('.stat-number[data-stat="blocks"]').textContent = data.blocks;
+      });
+  }, 15000);
+
+  document.getElementById("blockBtn").addEventListener("click", async () => {
+  const scannedUrl = document.getElementById("urlInput").value;
+
+  try {
+    const response = await fetch("/block_url", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: scannedUrl })
+    });
+
+    if (response.ok) {
+        window.location.href = "/blockpage";
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to block URL.");
+      }
+  } catch (err) {
+    console.error("Block URL error:", err);
+    alert("Network error. Failed to block URL.");
+  }
+});
+
+// ================== Recently Checked URLs ==================
+function loadRecentURLs() {
+  fetch("/recent_urls")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("recentList");
+      container.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        container.innerHTML = "<p>No recent scans yet.</p>";
+        return;
+      }
+
+      // Create table
+      const table = document.createElement("table");
+      table.classList.add("recent-table");
+
+      // Table header
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Result</th>
+            <th>Checked</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+
+      const tbody = table.querySelector("tbody");
+
+      data.forEach(item => {
+        const tr = document.createElement("tr");
+        const timeText = getTimeAgo(item.timestamp);
+
+        let cls = "result-unknown";
+        let resultText = "Unknown";
+        
+        if (item.result) {
+          const resultLower = item.result.toLowerCase();
+          resultText = item.result;
+          
+          if (resultLower.includes("phish")) {
+            cls = "result-phish";
+          } else if (resultLower.includes("safe")) {
+            cls = "result-safe";
+          } else if (resultLower.includes("block")) {
+            cls = "result-blocked";
+          }
+        }
+
+        // ✅ FIXED: Proper column structure
+        // Column 1: URL (left)
+        const td1 = document.createElement("td");
+        td1.innerHTML = `<span class="url-text">${item.url}</span>`;
+        
+        // Column 2: Result badge (center)
+        const td2 = document.createElement("td");
+        td2.innerHTML = `<span class="${cls}">${resultText}</span>`;
+        
+        // Column 3: Timestamp (right)
+        const td3 = document.createElement("td");
+        td3.className = "status-time";
+        td3.textContent = timeText;
+        
+        // Append in correct order
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        
+        tbody.appendChild(tr);
+      });
+
+      container.appendChild(table);
+    })
+    .catch(err => {
+      console.error("Error loading recent URLs:", err);
+      document.getElementById("recentList").innerHTML = "<p>Error loading recent URLs</p>";
+    });
+}
+
+// Load on startup and refresh every 15 s
+document.addEventListener("DOMContentLoaded", () => {
+  loadRecentURLs();
+  setInterval(loadRecentURLs, 15000);
+});
+
+
+</script>
+
+
+</body>
+</html>

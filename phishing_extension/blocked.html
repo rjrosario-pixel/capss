@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phishing Warning</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      background-color: #fb0000;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .warning-box {
+      max-width: 500px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1em;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: white;
+      color: #cc0000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffe6e6;
+    }
+  </style>
+</head>
+<body>
+  <div class="warning-box">
+    <h1>Phishing Threat Detected!</h1>
+    <p>TERRAPhish has blocked this website to protect you from a phishing attack.</p>
+    <p>This site was flagged for attempting to steal personal information like passwords, credit cards, or sensitive data.</p>
+    
+    <h2>Your safety comes first.</h2>
+    <p><strong id="phish-url"></strong></p>
+    <button id="go-back">Go Back to Safety</button>
+  </div>
+
+  <script src="/blocked.js"></script>
+
+</body>
+</html>

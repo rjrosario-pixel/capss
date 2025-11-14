@@ -1,0 +1,204 @@
+/* === TerraPhish Enhanced Popup UI (Fixed) === */
+/* Same theme, improved layout + sticky footer + smooth scroll */
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 290px;
+  height: 350px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #e8f2ff 0%, #edf6ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Main popup container --- */
+.popup-box {
+  width: 90%;
+  height: 90%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 22px;
+  position: relative;
+  overflow-y: overlay; /* ✅ scrollbar floats over content (no layout shift) */
+  scroll-behavior: smooth;
+
+  scrollbar-width: thin;
+  scrollbar-color: #343f4e #f1f5fa;
+}
+
+/* Chrome, Edge, Safari */
+.popup-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.popup-box::-webkit-scrollbar-track {
+  background: #f1f5fa;
+  border-radius: 10px;
+}
+
+.popup-box::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #1e88e5, #02335c);
+  border-radius: 10px;
+}
+
+.popup-box::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1565c0, #02274a);
+}
+
+/* content now scrolls with popup-box */
+.popup-content {
+  flex: 1 1 auto;
+  overflow: visible;
+  padding-bottom: 10px;
+}
+
+/* --- URL display --- */
+#current-url {
+  font-size: 11px;
+  color: #666;
+  word-break: break-all;
+  background: #f7faff;
+  border-radius: 6px;
+  padding: 6px;
+  margin: 5px 0 8px;
+  border: 1px solid #dfe9f6;
+}
+
+/* --- Text styling --- */
+p {
+  font-size: 13px;
+  margin: 4px 0 10px;
+  color: #333;
+}
+
+/* --- Buttons --- */
+button {
+  padding: 9px 16px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #02335c, #024987);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(30, 136, 229, 0.25);
+}
+
+button:hover {
+  background: linear-gradient(90deg, #044e8a, #023765);
+  box-shadow: 0 4px 8px rgba(30, 136, 229, 0.35);
+}
+
+button:active {
+  transform: scale(0.98);
+  background-color: #0d47a1;
+}
+
+/* --- Block button (red) --- */
+.block-btn {
+  background: linear-gradient(90deg, #e53935, #c62828);
+  box-shadow: 0 3px 6px rgba(229, 57, 53, 0.25);
+}
+
+.block-btn:hover {
+  background: linear-gradient(90deg, #d32f2f, #b71c1c);
+}
+
+.block-btn:active {
+  transform: scale(0.98);
+}
+
+/* --- Scan result display --- */
+.scan-result {
+  display: none; /* hidden by default */
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+  background: #f3f8ff;
+  border: 1px solid #d0e3ff;
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* --- Optional result color states (JS toggles) --- */
+.scan-result.safe {
+  color: #1b5e20;
+  background: #e8f5e9;
+  border-color: #c8e6c9;
+}
+.scan-result.phish {
+  color: #b71c1c;
+  background: #ffebee;
+  border-color: #ffcdd2;
+}
+
+/* --- Login reminder --- */
+.login-reminder {
+  font-size: 12.5px;
+  margin-top: 5px;
+  color: #d32f2f;
+}
+
+.login-reminder a {
+  color: #1e88e5;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-reminder a:hover {
+  text-decoration: underline;
+}
+
+/* --- Footer (always at bottom) --- */
+.popup-footer {
+  flex-shrink: 0;
+  border-top: 1px solid #e5eaf0;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+.bottom-link {
+  font-size: 13px;
+  text-align: center;
+}
+
+.bottom-link a {
+  text-decoration: none;
+  font-size: 11.5px;
+  color: #1e88e5;
+  font-weight: 600;
+}
+
+.bottom-link a:hover {
+  text-decoration: underline;
+}
+
+/* --- Logo section --- */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: -10px;
+  margin-bottom: 5px;
+}
+
+.logo-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin-bottom: -10px;
+}
