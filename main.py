@@ -1706,11 +1706,11 @@ if __name__ == "__main__":
 
     socketio.start_background_task(run_scheduler)
 
-    # Only run dev server locally
     if os.environ.get("RENDER") != "true":
         port = int(os.environ.get("PORT", 5000))
         print(f"🔹 Running local dev server on port {port}")
         socketio.run(app, host="0.0.0.0", port=port, debug=True, use_reloader=False)
+
 
 
 
