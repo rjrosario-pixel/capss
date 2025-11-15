@@ -10,7 +10,6 @@ print("🔹 ENV PORT:", os.environ.get("PORT"))
 print("🔹 Starting app import...")
 
 try:
-    from app import app   # or whatever your actual app object is
     print("🔹 App imported successfully!")
 except Exception as e:
     print("❌ ERROR WHILE IMPORTING APP:", e)
