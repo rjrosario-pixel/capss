@@ -66,7 +66,10 @@ scheduler = None
 
 # Configuration
 app.config['SECRET_KEY'] = 'rjphishingscanner123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://rj:1234567890@localhost/backupdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL',
+    'postgresql://rj:1234567890@localhost/backupdb'  # fallback for local dev
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Mail setup
