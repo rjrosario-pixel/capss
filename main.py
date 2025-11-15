@@ -5,6 +5,17 @@ except Exception as e:
     print("❌ Import error:", e)
     traceback.print_exc()
 
+import os
+print("🔹 ENV PORT:", os.environ.get("PORT"))
+print("🔹 Starting app import...")
+
+try:
+    from app import app   # or whatever your actual app object is
+    print("🔹 App imported successfully!")
+except Exception as e:
+    print("❌ ERROR WHILE IMPORTING APP:", e)
+    raise
+
 from flask import Flask, request, jsonify, render_template, redirect, flash, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -1724,10 +1735,11 @@ if __name__ == "__main__":
 
     socketio.start_background_task(run_scheduler)
 
-    if os.environ.get("RENDER") != "true":
-        port = int(os.environ.get("PORT", 5000))
-        print(f"🔹 Running local dev server on port {port}")
-        socketio.run(app, host="0.0.0.0", port=port, debug=True, use_reloader=False)
+port = int(os.environ.get("PORT", 5000))
+print(f"🔹 Running server on port {port}")
+
+socketio.run(app, host="0.0.0.0", port=port, debug=False, use_reloader=False)
+
 
 
 
