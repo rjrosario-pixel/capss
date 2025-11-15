@@ -1,3 +1,10 @@
+import traceback
+try:
+    print("🔍 Importing main.py...")
+except Exception as e:
+    print("❌ Import error:", e)
+    traceback.print_exc()
+
 from flask import Flask, request, jsonify, render_template, redirect, flash, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -33,7 +40,13 @@ from predict_url import predict_url
 
 rf_model = joblib.load("trained_models/randomForest_final.pkl")
 
-app = Flask(__name__)
+import traceback
+try:
+    app = Flask(__name__)
+except Exception as e:
+    print("❌ Flask app creation failed:", e)
+    traceback.print_exc()
+
 CORS(app, supports_credentials=True)
 
 scheduler = None
@@ -61,7 +74,12 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"   # 👈 Redirect to login page instead of JSON
 login_manager.login_message_category = "info"
-socketio = SocketIO(app, cors_allowed_origins="*")  # ✅ added
+
+try: 
+    socketio = SocketIO(app, cors_allowed_origins="*")  # ✅ added
+except Exception as e:
+    print("❌ SocketIO creation failed:", e)
+    traceback.print_exc()
 
 @socketio.on("join")
 def handle_join(data):
