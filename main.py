@@ -1713,26 +1713,30 @@ def recent_urls():
     ])
 
 
-# ---------------- Main Entrypoint ----------------
+# ---------------- Main Entrypoint ---------------- 
 if __name__ == "__main__":
     import os
+    import traceback
+
     print("\n" + "=" * 70)
     print("🔍 DEBUG: Starting application (local dev mode)")
     print("=" * 70)
 
+    # Preload caches
     try:
         preload_caches()
     except Exception as e:
         print(f"❌ Cache preload failed: {e}")
-        import traceback; traceback.print_exc()
+        traceback.print_exc()
 
+    # Start scheduler in background
     def run_scheduler():
         with app.app_context():
             try:
                 start_scheduler()
             except Exception as e:
-                print(f"❌ Scheduler failed to start: {e}")
-                import traceback; traceback.print_exc()
+                print(f"❌ Scheduler failed: {e}")
+                traceback.print_exc()
 
     socketio.start_background_task(run_scheduler)
 
@@ -1740,6 +1744,7 @@ if __name__ == "__main__":
     if os.environ.get("RENDER") != "true":
         port = int(os.environ.get("PORT", 5000))
         socketio.run(app, host="0.0.0.0", port=port, debug=True)
+
 
 
 
