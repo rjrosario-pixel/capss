@@ -1769,6 +1769,12 @@ if __name__ == "__main__":
         port = int(os.environ.get("PORT", 5000))
         socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
+        # ============ GUNICORN WSGI APPLICATION ============
+# Create a WSGI-compatible app wrapper for Gunicorn
+application = app
+application.wsgi_app = socketio.WSGIApp(socketio, application.wsgi_app)
+
+
 
 
 
