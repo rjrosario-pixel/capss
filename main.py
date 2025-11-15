@@ -1715,7 +1715,28 @@ def recent_urls():
         } for r in recent
     ])
 
-
+# ---------------- Production Initialization (for Gunicorn/Render) ----------------
+if os.environ.get("RENDER") == "true" or os.environ.get("PORT"):
+    print("\n🚀 PRODUCTION MODE: Initializing for Gunicorn")
+    
+    # Preload caches
+    try:
+        preload_caches()
+    except Exception as e:
+        print(f"❌ Cache preload failed: {e}")
+        traceback.print_exc()
+    
+    # Start scheduler in background
+    def run_scheduler():
+        with app.app_context():
+            try:
+                start_scheduler()
+            except Exception as e:
+                print(f"❌ Scheduler failed: {e}")
+                traceback.print_exc()
+    
+    socketio.start_background_task(run_scheduler)
+    print("✅ Production initialization complete\n")
 # ---------------- Main Entrypoint ---------------- 
 if __name__ == "__main__":
     import os
