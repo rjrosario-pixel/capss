@@ -1718,28 +1718,67 @@ def recent_urls():
         } for r in recent
     ])
 
+# ============ CRON JOB ENDPOINT ============
+@app.route('/api/cron/rescan-urls', methods=['POST'])
+def cron_rescan_urls():
+    """
+    Cron job endpoint to rescan all URLs every hour.
+    This is called by Render's cron scheduler.
+    """
+    auth_header = request.headers.get('Authorization', '')
+    cron_secret = os.environ.get('CRON_SECRET', 'default-secret-change-me')
+    
+    # Verify the cron secret for security
+    if auth_header != f"Bearer {cron_secret}":
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    try:
+        print("🔄 Starting hourly rescan cron job...")
+        with app.app_context():
+            # Get all phishing URLs and rescan them
+            urls_to_rescan = PhishingURL.query.all()
+            rescan_count = 0
+            
+            for phishing_url in urls_to_rescan:
+                try:
+                    # Re-extract features and predict
+                    from feature_extraction.feature_extractor import extract_features
+                    features = extract_features(phishing_url.url)
+                    prediction = model.predict([features])[0]
+                    
+                    # Update result
+                    phishing_url.result = "Phishing" if prediction == 1 else "Legitimate"
+                    phishing_url.updated_at = datetime.now(timezone.utc)
+                    rescan_count += 1
+                except Exception as e:
+                    print(f"⚠️ Error rescanning {phishing_url.url}: {e}")
+            
+            db.session.commit()
+            print(f"✅ Rescan complete: {rescan_count} URLs updated")
+            return jsonify({
+                "status": "success",
+                "message": f"Rescanned {rescan_count} URLs"
+            }), 200
+    
+    except Exception as e:
+        print(f"❌ Cron job failed: {e}")
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
 # ============ PRODUCTION INITIALIZATION (for Gunicorn/Render) ============
 if os.environ.get("RENDER") == "true" or os.environ.get("PORT"):
     print("\n🚀 PRODUCTION MODE: Initializing for Gunicorn")
     
-    # Preload caches
+    # Just verify database, skip cache loading to save memory
     try:
         preload_caches()
     except Exception as e:
-        print(f"❌ Cache preload failed: {e}")
-        traceback.print_exc()
+        print(f"⚠️ Preload warning: {e}")
     
-    # Start scheduler in background
-    def run_scheduler():
-        with app.app_context():
-            try:
-                start_scheduler()
-            except Exception as e:
-                print(f"❌ Scheduler failed: {e}")
-                traceback.print_exc()
-    
-    socketio.start_background_task(run_scheduler)
-    print("✅ Production initialization complete\n")
+    # Skip scheduler in production to save memory (use cron job instead)
+    print("✅ Production initialization complete (scheduler disabled for memory optimization)\n")
+
 
 # ============ LOCAL DEVELOPMENT MODE ============
 if __name__ == "__main__":
@@ -1750,14 +1789,13 @@ if __name__ == "__main__":
     print("🔍 DEBUG: Starting application (local dev mode)")
     print("=" * 70)
 
-    # Preload caches
+    # Preload caches for dev
     try:
         preload_caches()
     except Exception as e:
-        print(f"❌ Cache preload failed: {e}")
-        traceback.print_exc()
+        print(f"⚠️ Preload warning: {e}")
 
-    # Start scheduler in background
+    # Start scheduler in background (dev only)
     def run_scheduler():
         with app.app_context():
             try:
@@ -1772,9 +1810,6 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
-# ============ GUNICORN COMPATIBILITY ============
-if os.environ.get("RENDER") == "true" or os.environ.get("PORT"):
-    print("🚀 Production mode - socketio.run() will be skipped")
 
 
 
