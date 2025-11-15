@@ -1769,10 +1769,17 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
-# ============ GUNICORN WSGI APPLICATION (AFTER EVERYTHING) ============
-# This MUST be outside and after if __name__ == "__main__"
-application = app
-application.wsgi_app = socketio.WSGIApp(socketio, application.wsgi_app)
+# ============ GUNICORN WSGI APPLICATION ============
+# Create WSGI app for Gunicorn
+try:
+    application = socketio.WSGIApp(socketio, app)
+    print("✅ WSGI application created successfully")
+except Exception as e:
+    print(f"❌ Failed to create WSGI app: {e}")
+    import traceback
+    traceback.print_exc()
+    application = app
+
 
 
 
