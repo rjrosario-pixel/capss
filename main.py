@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 import traceback
 try:
     print("🔍 Importing main.py...")
@@ -14,8 +17,7 @@ try:
 except Exception as e:
     print("❌ ERROR WHILE IMPORTING APP:", e)
     raise
-import eventlet
-eventlet.monkey_patch()
+
 from flask import Flask, request, jsonify, render_template, redirect, flash, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
