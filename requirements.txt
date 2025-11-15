@@ -18,3 +18,5 @@ whois
 gunicorn
 joblib
 tzlocal
+scikit-learn
+psycopg2-binary
