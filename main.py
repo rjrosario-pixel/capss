@@ -1715,7 +1715,7 @@ def recent_urls():
         } for r in recent
     ])
 
-# ---------------- Production Initialization (for Gunicorn/Render) ----------------
+# ============ PRODUCTION INITIALIZATION (for Gunicorn/Render) ============
 if os.environ.get("RENDER") == "true" or os.environ.get("PORT"):
     print("\n🚀 PRODUCTION MODE: Initializing for Gunicorn")
     
@@ -1737,7 +1737,8 @@ if os.environ.get("RENDER") == "true" or os.environ.get("PORT"):
     
     socketio.start_background_task(run_scheduler)
     print("✅ Production initialization complete\n")
-# ---------------- Main Entrypoint ---------------- 
+
+# ============ LOCAL DEVELOPMENT MODE ============
 if __name__ == "__main__":
     import os
     import traceback
@@ -1764,13 +1765,12 @@ if __name__ == "__main__":
 
     socketio.start_background_task(run_scheduler)
 
-    # Local testing only — remove this for Render
-    if os.environ.get("RENDER") != "true":
-        port = int(os.environ.get("PORT", 5000))
-        socketio.run(app, host="0.0.0.0", port=port, debug=True)
+    # Run app locally
+    port = int(os.environ.get("PORT", 5000))
+    socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
-        # ============ GUNICORN WSGI APPLICATION ============
-# Create a WSGI-compatible app wrapper for Gunicorn
+# ============ GUNICORN WSGI APPLICATION (AFTER EVERYTHING) ============
+# This MUST be outside and after if __name__ == "__main__"
 application = app
 application.wsgi_app = socketio.WSGIApp(socketio, application.wsgi_app)
 
