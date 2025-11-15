@@ -91,6 +91,8 @@ except Exception as e:
     print("❌ SocketIO creation failed:", e)
     traceback.print_exc()
 
+print("🔹 App object ready:", app)   
+
 @socketio.on("join")
 def handle_join(data):
     try:
@@ -1729,16 +1731,15 @@ if __name__ == "__main__":
             try:
                 start_scheduler()
             except Exception as e:
-                print(f"❌ Scheduler failed: {e}")
+                print(f"❌ Scheduler failed to start: {e}")
                 import traceback; traceback.print_exc()
 
     socketio.start_background_task(run_scheduler)
 
-    # Only run this if running locally (not via Gunicorn on Render)
+    # Local testing only — remove this for Render
     if os.environ.get("RENDER") != "true":
         port = int(os.environ.get("PORT", 5000))
-        print(f"🔹 Running local dev server on port {port}")
-        socketio.run(app, host="0.0.0.0", port=port, debug=True, use_reloader=False)
+        socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
 
 
