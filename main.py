@@ -1769,6 +1769,9 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
+# ============ GUNICORN COMPATIBILITY ============
+if os.environ.get("RENDER") == "true" or os.environ.get("PORT"):
+    print("🚀 Production mode - socketio.run() will be skipped")
 
 
 

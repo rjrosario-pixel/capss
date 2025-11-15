@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-WSGI entry point for Gunicorn
+WSGI entry point for Gunicorn - Simple approach
 """
 import os
 import sys
@@ -11,22 +11,18 @@ print("🚀 Starting WSGI Application")
 print("=" * 70)
 
 try:
-    print("📦 Importing Flask and SocketIO...")
-    from flask import Flask
-    from flask_socketio import SocketIO
-    
-    print("📦 Importing app from main.py...")
+    print("📦 Importing main module...")
     from main import app, socketio
-    print("✅ App imported successfully")
+    print("✅ Main module imported")
     
-    print("🔧 Creating WSGI application wrapper...")
-    # Correct way to wrap Flask app with SocketIO for WSGI/Gunicorn
-    app.wsgi_app = socketio.WSGIApp(socketio, app.wsgi_app)
+    print("✅ Creating application wrapper for Gunicorn...")
+    # Simple approach: just use app directly with eventlet worker
+    # Eventlet will handle SocketIO compatibility
     application = app
-    print("✅ WSGI application created successfully")
+    print("✅ Application ready")
     print("=" * 70 + "\n")
     
 except Exception as e:
-    print(f"\n❌ FATAL ERROR DURING WSGI SETUP: {e}")
+    print(f"\n❌ FATAL ERROR: {e}")
     traceback.print_exc()
     sys.exit(1)
