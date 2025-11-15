@@ -1,33 +1,32 @@
 #!/usr/bin/env python3
 """
 WSGI entry point for Gunicorn
-This bypasses main.py complexity and creates app directly
 """
 import os
 import sys
+import traceback
 
 print("\n" + "=" * 70)
 print("🚀 Starting WSGI Application")
 print("=" * 70)
 
 try:
-    # Import Flask and create app
+    print("📦 Importing Flask and SocketIO...")
     from flask import Flask
     from flask_socketio import SocketIO
     
-    print("✅ Flask and SocketIO imported")
-    
-    # Import your app from main
+    print("📦 Importing app from main.py...")
     from main import app, socketio
-    print("✅ App imported from main.py")
+    print("✅ App imported successfully")
     
-    # Create WSGI application for Gunicorn
-    application = socketio.WSGIApp(socketio, app)
-    print("✅ WSGI application created")
+    print("🔧 Creating WSGI application wrapper...")
+    # Correct way to wrap Flask app with SocketIO for WSGI/Gunicorn
+    app.wsgi_app = socketio.WSGIApp(socketio, app.wsgi_app)
+    application = app
+    print("✅ WSGI application created successfully")
     print("=" * 70 + "\n")
     
 except Exception as e:
-    print(f"\n❌ ERROR DURING WSGI SETUP: {e}")
-    import traceback
+    print(f"\n❌ FATAL ERROR DURING WSGI SETUP: {e}")
     traceback.print_exc()
     sys.exit(1)
