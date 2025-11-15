@@ -1734,10 +1734,12 @@ if __name__ == "__main__":
 
     socketio.start_background_task(run_scheduler)
 
-port = int(os.environ.get("PORT", 5000))
-print(f"🔹 Running server on port {port}")
+    # Only run this if running locally (not via Gunicorn on Render)
+    if os.environ.get("RENDER") != "true":
+        port = int(os.environ.get("PORT", 5000))
+        print(f"🔹 Running local dev server on port {port}")
+        socketio.run(app, host="0.0.0.0", port=port, debug=True, use_reloader=False)
 
-socketio.run(app, host="0.0.0.0", port=port, debug=False, use_reloader=False)
 
 
 
